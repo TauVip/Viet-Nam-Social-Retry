@@ -52,8 +52,8 @@ const Register = () => {
             value={fullname}
             style={{ background: alert.fullname ? '#fd2d6a14' : '' }}
           />
-          <small className='form-text text-muted'>
-            We'll never share your email with anyone else.
+          <small className='form-text text-danger'>
+            {alert.fullname ? alert.fullname : ''}
           </small>
         </div>
 
@@ -66,9 +66,10 @@ const Register = () => {
             name='username'
             onChange={handleChangeInput}
             value={username.toLowerCase().replace(/ /g, '')}
+            style={{ background: alert.username ? '#fd2d6a14' : '' }}
           />
-          <small className='form-text text-muted'>
-            We'll never share your email with anyone else.
+          <small className='form-text text-danger'>
+            {alert.username ? alert.username : ''}
           </small>
         </div>
 
@@ -81,15 +82,15 @@ const Register = () => {
             name='email'
             onChange={handleChangeInput}
             value={email}
+            style={{ background: alert.email ? '#fd2d6a14' : '' }}
           />
-          <small className='form-text text-muted'>
-            We'll never share your email with anyone else.
+          <small className='form-text text-danger'>
+            {alert.email ? alert.email : ''}
           </small>
         </div>
 
         <div className='form-group'>
           <label htmlFor='exampleInputPassword1'>Password</label>
-
           <div className='pass'>
             <input
               type={typePass ? 'text' : 'password'}
@@ -98,16 +99,19 @@ const Register = () => {
               onChange={handleChangeInput}
               value={password}
               name='password'
+              style={{ background: alert.password ? '#fd2d6a14' : '' }}
             />
             <small onClick={() => setTypePass(!typePass)}>
               {typePass ? 'Hide' : 'Show'}
             </small>
           </div>
+          <small className='form-text text-danger'>
+            {alert.password ? alert.password : ''}
+          </small>
         </div>
 
         <div className='form-group'>
           <label htmlFor='cf_password'>Confirm Password</label>
-
           <div className='pass'>
             <input
               type={typeCfPass ? 'text' : 'password'}
@@ -116,11 +120,15 @@ const Register = () => {
               onChange={handleChangeInput}
               value={cf_password}
               name='cf_password'
+              style={{ background: alert.cf_password ? '#fd2d6a14' : '' }}
             />
             <small onClick={() => setTypeCfPass(!typeCfPass)}>
               {typeCfPass ? 'Hide' : 'Show'}
             </small>
           </div>
+          <small className='form-text text-danger'>
+            {alert.cf_password ? alert.cf_password : ''}
+          </small>
         </div>
 
         <div className='row justify-content-between mx-0 mb-1'>
@@ -165,7 +173,7 @@ const Register = () => {
 
         <p className='my-2'>
           Already have an account?{' '}
-          <Link to='/login' style={{ color: 'crimson' }}>
+          <Link to='/' style={{ color: 'crimson' }}>
             Login Now
           </Link>
         </p>

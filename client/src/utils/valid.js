@@ -10,7 +10,7 @@ const valid = ({ fullname, username, email, password, cf_password }) => {
     err.username = 'User name is up to 25 characters long.'
 
   if (!email) err.email = 'Please add your email.'
-  else if (validateEmail(email)) err.email = 'Email format is incorrect.'
+  else if (!validateEmail(email)) err.email = 'Email format is incorrect.'
 
   if (!password) err.password = 'Please add your password.'
   else if (password.length < 6)
