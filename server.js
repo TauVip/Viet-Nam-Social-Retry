@@ -3,11 +3,17 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+const SocketServer = require('./socketServer')
 
 const app = express()
 app.use(express.json())
 app.use(cors())
 app.use(cookieParser())
+
+// Socket
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
+io.on('connection', socket => SocketServer(socket))
 
 // Routes
 app.use('/api', require('./routes/authRouter'))
@@ -22,6 +28,6 @@ mongoose.connect(URI, null, err => {
 })
 
 const port = process.env.port || 5000
-app.listen(port, () => console.log('Server is running on port', port))
+http.listen(port, () => console.log('Server is running on port', port))
 
-// MERN Stack - Build a social media app (instagram , facebook, twitter clone) - #20 Comments Display | 25:01 / 33:41
+// MERN Stack - Build a social media app (instagram , facebook, twitter clone) - #28 RealTime | 26:53 / 47:42
