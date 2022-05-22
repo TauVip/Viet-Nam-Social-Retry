@@ -7,7 +7,7 @@ import { BASE_URL } from '../../../utils/config'
 import Avatar from '../../Avatar'
 
 const CardHeader = ({ post }) => {
-  const { auth } = useSelector(state => state)
+  const { auth, socket } = useSelector(state => state)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -17,7 +17,7 @@ const CardHeader = ({ post }) => {
 
   const handleDeletePost = () => {
     if (window.confirm('Are you sure want to delete this post?')) {
-      dispatch(deletePost({ post, auth }))
+      dispatch(deletePost({ post, auth, socket }))
       return navigate('/')
     }
   }

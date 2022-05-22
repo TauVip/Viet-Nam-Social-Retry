@@ -11,6 +11,7 @@ import Login from './pages/login'
 import Register from './pages/register'
 import { refreshToken } from './redux/actions/authAction'
 import { GLOBALTYPES } from './redux/actions/globalTypes'
+import { getNotifies } from './redux/actions/notifyAction'
 import { getPosts } from './redux/actions/postAction'
 import { getSuggestions } from './redux/actions/suggestionsAction'
 import SocketClient from './SocketClient'
@@ -31,6 +32,7 @@ function App() {
     if (auth.token) {
       dispatch(getPosts(auth.token))
       dispatch(getSuggestions(auth.token))
+      dispatch(getNotifies(auth.token))
     }
   }, [auth.token, dispatch])
 
