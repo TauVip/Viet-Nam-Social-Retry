@@ -1,13 +1,13 @@
 import { deleteDataAPI, patchDataAPI, postDataAPI } from '../../utils/fetchData'
 import { DeleteData, EditData, GLOBALTYPES } from './globalTypes'
 import { POST_TYPES } from './postAction'
+import { createNotify, removeNotify } from './notifyAction'
 
 export const createComment =
   ({ post, newComment, auth, socket }) =>
   async dispatch => {
     const newPost = { ...post, comments: [...post.comments, newComment] }
     dispatch({ type: POST_TYPES.UPDATE_POST, payload: newPost })
-    socket.emit('createComment', newPost)
 
     try {
       const data = {
@@ -19,6 +19,21 @@ export const createComment =
       const newData = { ...res.data.newComment, user: auth.user }
       const newPost = { ...post, comments: [...post.comments, newData] }
       dispatch({ type: POST_TYPES.UPDATE_POST, payload: newPost })
+
+      socket.emit('createComment', newPost)
+
+      // Notify
+      const msg = {
+        id: res.data.newComment._id,
+        text: newComment.reply
+          ? 'mentioned you in a comment.'
+          : 'has commented on your post.',
+        recipients: newComment.reply ? [newComment.tag._id] : [post.user._id],
+        url: `/post/${post._id}`,
+        content: post.content,
+        image: post.images[0].url
+      }
+      dispatch(createNotify({ msg, auth, socket }))
     } catch (err) {
       dispatch({
         type: GLOBALTYPES.ALERT,
@@ -103,9 +118,19 @@ export const deleteComment =
     socket.emit('deleteComment', newPost)
 
     try {
-      deleteArr.forEach(item =>
+      deleteArr.forEach(item => {
         deleteDataAPI(`comment/${item._id}`, auth.token)
-      )
+
+        const msg = {
+          id: item._id,
+          text: comment.reply
+            ? 'mentioned you in a comment.'
+            : 'has commented on your post.',
+          recipients: comment.reply ? [comment.tag._id] : [post.user._id],
+          url: `/post/${post._id}`
+        }
+        dispatch(removeNotify({ msg, auth, socket }))
+      })
     } catch (err) {
       dispatch({
         type: GLOBALTYPES.ALERT,

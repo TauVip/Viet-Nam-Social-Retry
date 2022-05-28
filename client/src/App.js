@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { io } from 'socket.io-client'
 import Alert from './components/alert/Alert'
 import Header from './components/header/Header'
+import CallModal from './components/message/CallModal'
 import StatusModal from './components/StatusModal'
 import PrivateRouter from './customRouter/PrivateRouter'
 import Home from './pages/home'
@@ -15,9 +16,10 @@ import { getNotifies } from './redux/actions/notifyAction'
 import { getPosts } from './redux/actions/postAction'
 import { getSuggestions } from './redux/actions/suggestionsAction'
 import SocketClient from './SocketClient'
+import Peer from 'peerjs'
 
 function App() {
-  const { auth, status, modal } = useSelector(state => state)
+  const { auth, status, modal, call } = useSelector(state => state)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -36,6 +38,23 @@ function App() {
     }
   }, [auth.token, dispatch])
 
+  useEffect(() => {
+    if (!('Notification' in window))
+      alert('This browser does not support desktop notification')
+    else if (Notification.permission === 'granted') {
+    } else if (Notification.permission !== 'denied') {
+      Notification.requestPermission().then(function (permission) {
+        if (permission === 'granted') {
+        }
+      })
+    }
+  }, [])
+
+  useEffect(() => {
+    const newPeer = new Peer(undefined, { host: '/', port: '3001' })
+    dispatch({ type: GLOBALTYPES.PEER, payload: newPeer })
+  }, [dispatch])
+
   return (
     <BrowserRouter>
       <Alert />
@@ -46,6 +65,7 @@ function App() {
           {auth.token && <Header />}
           {status && <StatusModal />}
           {auth.token && <SocketClient />}
+          {call && <CallModal />}
 
           <Routes>
             <Route path='/' element={auth.token ? <Home /> : <Login />} />
